@@ -6,6 +6,7 @@ from socket import gethostbyname
 
 good = bad = unknown = 0
 result = [['good knots', good], ['bad knots', bad], ['unknown knot', unknown]]
+results = []
 
 
 class IdThread(threading.Thread):
@@ -24,7 +25,6 @@ class IdThread(threading.Thread):
                 result[1][1] += 1
             except:
                 result[2][1] += 1
-        return result
 
 
 def parse(filename):
@@ -38,13 +38,13 @@ def parse(filename):
 
 
 def main(inputfile, *args):
-    global result
+    flag = True if args else False
     lst = parse(inputfile)
     start = time()
     for wave in range(len(lst)):
         thread = IdThread(wave, inputfile)
         thread.start()
-    if args:
+    if flag:
         outfile = args[0]
         with open(outfile, "w") as file:
             writer = csv.writer(file)
@@ -52,8 +52,9 @@ def main(inputfile, *args):
     else:
         pass
     finish = time()
-    print(f'Time succeed: {finish - start}')
+    print(f'Time succeed: {(finish - start)* 10000}')
 
 
 main('file.txt', 'file.csv')
-# main(sys.argv[1], sys.argv[2])
+# if __name__ == '__main__':
+#     main(sys.argv[1], sys.argv[2])
